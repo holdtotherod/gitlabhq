@@ -23,7 +23,7 @@ class DashboardController < ApplicationController
 
     @projects = @projects.page(params[:page]).per(30)
 
-    @events = Event.in_projects(current_user.project_ids)
+    @events = Event.recent_for_projects(@projects + @public_projects)
     @events = @event_filter.apply_filter(@events)
     @events = @events.limit(20).offset(params[:offset] || 0)
 
