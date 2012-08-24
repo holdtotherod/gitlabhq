@@ -21,7 +21,7 @@ module Authority
   def repository_readers
     keys = Key.joins({user: :users_projects}).
       where("users_projects.project_id = ? AND users_projects.project_access = ?", id, UsersProject::REPORTER)
-    keys.map(&:identifier) + deploy_keys.map(&:identifier)
+    keys.map(&:identifier) + deploy_keys.map(&:identifier) + (public? ? ['@all'] : [])
   end
 
   def repository_writers
@@ -37,15 +37,15 @@ module Authority
   end
 
   def allow_read_for?(user)
-    !users_projects.where(user_id: user.id).empty?
+    self.public || !users_projects.where(user_id: user.id).empty?
   end
 
   def guest_access_for?(user)
-    !users_projects.where(user_id: user.id).empty?
+    self.public? || !users_projects.where(user_id: user.id).empty?
   end
 
   def report_access_for?(user)
-    !users_projects.where(user_id: user.id, project_access: [UsersProject::REPORTER, UsersProject::DEVELOPER, UsersProject::MASTER]).empty?
+    self.public? || !users_projects.where(user_id: user.id, project_access: [UsersProject::REPORTER, UsersProject::DEVELOPER, UsersProject::MASTER]).empty?
   end
 
   def dev_access_for?(user)

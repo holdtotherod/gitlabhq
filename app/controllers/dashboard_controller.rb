@@ -18,6 +18,9 @@ class DashboardController < ApplicationController
                   @projects
                 end
 
+    @public_projects = Project.find_all_by_private_flag(false) - @projects
+    @has_authorized_projects ||= @public_projects.count > 0
+
     @projects = @projects.page(params[:page]).per(30)
 
     @events = Event.in_projects(current_user.project_ids)
