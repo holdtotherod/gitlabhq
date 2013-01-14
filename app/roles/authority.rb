@@ -37,7 +37,7 @@ module Authority
   end
 
   def allow_read_for?(user)
-    self.public || !users_projects.where(user_id: user.id).empty?
+    self.public? || !users_projects.where(user_id: user.id).empty?
   end
 
   def guest_access_for?(user)
