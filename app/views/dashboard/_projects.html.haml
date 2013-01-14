@@ -40,20 +40,20 @@
     Public Projects
     %small
       (#{public_projects.count})
-  %ul.unstyled
+  %ul.well-list
     - if public_projects.any?
       - public_projects.each do |project|
-        %li.wll
+        %li
           = link_to project_path(project), class: dom_class(project) do
-            %strong.project_name= truncate(project.name, length: 25)
+            %strong.well_title= truncate(project.name, length: 25)
             %span.arrow
               &rarr;
             %span.last_activity
               %strong Last activity:
               %span= project_last_activity(project)
     - else
-      %h4
-        .project No Public Projects
+      %li
+        %h3.nothing_here_message There are no projects here.
   .bottom= paginate projects, theme: "gitlab"
 
 %hr
